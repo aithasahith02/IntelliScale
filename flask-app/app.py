@@ -1,6 +1,6 @@
 # This flask app is developed to simlulates load
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
-from flask import Flask
+from flask import Flask, Response
 
 import random
 import time
