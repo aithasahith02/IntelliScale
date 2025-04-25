@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  dev-container:
+    build: ./dev-env
+    volumes:
+      - .:/workspace
+    ports:
+      - "5050:5000" # Port for Flask app
+    networks:
+      - intelliscale-net
+    tty: true
+    stdin_open: true
+
+networks:
+  intelliscale-net:
+    external: false
+
