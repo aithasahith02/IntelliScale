@@ -1,6 +1,7 @@
 version: '3.9'
 
 services:
+  # Container for dev environment
   dev-container:
     build: ./dev-env
     container_name: dev-container
@@ -11,6 +12,7 @@ services:
     tty: true
     stdin_open: true
 
+  # Flask app container for load simulation
   flask-app:
     build: ./flask-app
     container_name: flask-app
@@ -19,6 +21,7 @@ services:
     networks:
       - intelliscale-net
 
+  # RL agent container for decision making 
   rl-agent:
     build: ./rl-agent
     container_name: rl-agent
@@ -28,6 +31,18 @@ services:
       - flask-app
     networks:
       - intelliscale-net
+
+  # Prometheus service for metrics and data collection
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - intelliscale-net
+
 
 networks:
   intelliscale-net:
