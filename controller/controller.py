@@ -1,15 +1,12 @@
 import requests
 import time
 
-# URLs for Prometheus and RL agent
-PROMETHEUS_URL = "http://localhost:9090"
-RL_AGENT_URL = "http://localhost:8000/decide/"
+PROMETHEUS_URL = "http://prometheus:9090"
+RL_AGENT_URL = "http://rl-agent:8000/decide/"
 
-# Functions to send requests to prometheus for metrics
-# Getting the CPU usage
 def get_cpu_usage():
     query = 'avg(rate(process_cpu_seconds_total[1m])) * 100'
-    response = requests.get(f"{PROMETHEUS_URL}/api/v1/query", params={'query': query})
+    response = requests.get(f"{PROMETHEUS_URL}/api/v1/query", params={'query': query}, timeout=5)
     result = response.json()
 
     try:
@@ -18,10 +15,9 @@ def get_cpu_usage():
     except (IndexError, KeyError):
         return 0.0
 
-# Getting the memory  usage
 def get_memory_usage():
-    query = 'avg(process_resident_memory_bytes) / 1000000'  
-    response = requests.get(f"{PROMETHEUS_URL}/api/v1/query", params={'query': query})
+    query = 'avg(process_resident_memory_bytes) / 1000000'
+    response = requests.get(f"{PROMETHEUS_URL}/api/v1/query", params={'query': query}, timeout=5)
     result = response.json()
 
     try:
@@ -30,29 +26,28 @@ def get_memory_usage():
     except (IndexError, KeyError):
         return 0.0
 
-# The main controller loop
 def controller_loop():
     while True:
-        cpu = get_cpu_usage()
-        memory = get_memory_usage()
-        request_rate = 100  # dummy for now
-
-        print(f"Current CPU: {cpu:.2f}%, Memory: {memory:.2f} MB, Requests/sec: {request_rate}")
-
         try:
+            cpu = get_cpu_usage()
+            memory = get_memory_usage()
+            request_rate = 100  # dummy
+
+            print(f"Current CPU: {cpu:.2f}%, Memory: {memory:.2f} MB, Requests/sec: {request_rate}")
+
             rl_response = requests.post(RL_AGENT_URL, params={
                 'cpu': cpu,
                 'memory': memory,
                 'request_rate': request_rate
-            })
+            }, timeout=5)
 
             decision = rl_response.json().get('action', 'no_action')
             print(f"RL Agent Decision: {decision}")
 
         except Exception as e:
-            print(f"Error communicating with RL agent: {e}")
+            print(f"[ERROR] Controller Loop Failed: {e}")
 
-        time.sleep(10) # Runs for every 10 seconds
+        time.sleep(10)
 
 if __name__ == "__main__":
     controller_loop()

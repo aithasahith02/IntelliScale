@@ -6,6 +6,6 @@ COPY controller.py ./
 
 RUN pip install requests
 
-CMD ["python", "controller.py"]
+CMD ["python", "-u", "controller.py"]
 
 
