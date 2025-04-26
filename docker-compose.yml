@@ -12,6 +12,17 @@ services:
     tty: true
     stdin_open: true
 
+  # Controller 
+  controller:
+    build: ./controller
+    container_name: controller
+    depends_on:
+      - flask-app
+      - rl-agent
+      - prometheus
+    networks:
+      - intelliscale-net
+
   # Flask app container for load simulation
   flask-app:
     build: ./flask-app
