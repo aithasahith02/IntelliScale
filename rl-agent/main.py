@@ -1,27 +1,30 @@
 from fastapi import FastAPI
-from rl_env import DummyEnv
-from prometheus_client import generate_latest
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import JSONResponse
+from stable_baselines3 import PPO
+import numpy as np
+from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI()
 
-env = DummyEnv()   # Instance of Dummy ENV
+# Exposing to Prometheus
+Instrumentator().instrument(app).expose(app)
 
-@app.get("/")
-def root():
-    return {"message": "IntelliScale RL Agent is Running!"}
+# Loading the trained RL model
+model = PPO.load("ppo_intelliscale.zip")
 
-# Decision API
+ACTION_MAPPING = {
+        0: "scale_down",
+        1: "no_action",
+        2: "scale_up"
+        }
+
+
+# Decision based on RL-agent  API
 @app.post("/decide/")
-def decide(cpu: float, memory: float, request_rate: float):
-    """
-    Receives system metrics from the caller and returns a scaling decision.
-    """
-    state = [cpu, memory, request_rate]  
-    action = env.decide_action(state)   
-    return {"action": action}
+def decide(cpu: float, memory: float, request_rate: int):
+    obs = np.array([cpu, memory, request_rate], dtype=np.float32)
+    obs = obs.reshape(1, -1)
+    action, _states = model.predict(obs, deterministic=True)
+    action_str = ACTION_MAPPING.get(int(action), "no_action")
 
-# Metrics Endpoint for Prometheus
-@app.get("/metrics")
-def metrics():
-    return PlainTextResponse(generate_latest())
+    return JSONResponse(content={"action": action_str})
