@@ -1,101 +1,128 @@
-# IntelliScale
+![Architecture Diagram](images/intelliscale.png)
 
-[![Status](https://img.shields.io/badge/Status-Under%20Development-yellow)]()
+🚀 Overview
+-----------
 
----
+**IntelliScale** is a **Reinforcement Learning (RL)-driven**, **cloud-native auto-scaling platform** that intelligently adjusts application resources based on live system metrics, surpassing traditional threshold-based scaling. Built entirely using **Docker**, **Prometheus**, **FastAPI**, and **Flask**, IntelliScale is designed for smarter, predictive scaling decisions in real-time, running fully isolated on a local development environment.
 
-## 🚀 Overview
+* * * * *
 
-**IntelliScale** is a **Reinforcement Learning (RL)-driven**, **cloud-native auto-scaling platform** that intelligently adjusts application resources based on live system metrics, beyond traditional threshold-based scaling. Built entirely on **Docker**, **Kubernetes**, **Prometheus**, and **FastAPI**, IntelliScale aims to deliver smarter, predictive scaling decisions in real-time.
+📈 Key Features
+---------------
 
----
+-   **RL-Driven Scaling:** Proactive scaling decisions based on learned system behavior instead of reactive CPU/memory thresholds.
 
-## 📈 Key Features
+-   **Prometheus Metrics Integration:** Live scraping of CPU, memory, and request rates from applications.
 
-- **RL-Driven Scaling:** Proactive scaling decisions based on workload prediction, not just threshold crossings.
-- **Prometheus Metrics Integration:** Live monitoring of CPU, memory, and request load for real-time decisions.
-- **Kubernetes and Docker Native:** Full containerization and orchestration for cloud-native deployments.
-- **Resilient Controller Service:** Autonomous feedback loop for continuous learning and decision execution.
+-   **Containerized Local Setup:** Entire platform runs isolated inside Docker containers, minimizing resource wastage and avoiding cloud costs.
 
----
+-   **Resilient Controller Service:** Central logic loop managing metrics pulling, RL querying, and scaling decisions.
 
-## 🛠️ Tech Stack
+-   **Grafana Dashboards:** Real-time monitoring and visualization of key system metrics.
 
-- **Docker** – Containerization
-- **Kubernetes** – Orchestration
-- **Prometheus** – Metrics collection
-- **FastAPI** – RL Agent API
-- **Flask** – Workload generation and simulation
-- **Python** – Controller development
+* * * * *
 
----
+🛠️ Tech Stack
+--------------
 
-## 🔄 Architecture Overview
+-   **Docker** -> Containerization of all services
 
-```plaintext
+-   **Prometheus** -> Metrics collection and scraping
+
+-   **FastAPI** -> Lightweight API server for RL-Agent
+
+-   **Flask** -> Simulated application workload
+
+-   **Python** -> Controller development
+
+-   **Grafana** -> Visualization and dashboards
+
+* * * * *
+
+🔄 Architecture Overview
+------------------------
+
+```
 User Traffic
-    └──> Flask App (simulated load)
-        └──> Prometheus (scraping /metrics)
-            └──> Controller (fetches metrics)
-                └──> RL Agent (decides scale_up / scale_down / no_action)
+    └└> Flask App (simulated load)
+         └└> Prometheus (scrapes /metrics endpoint)
+              └└> Controller (collects system metrics)
+                   └└> RL Agent (makes scaling decision)
+                        └└> Controller (executes scaling action)
+
 ```
 
----
+* * * * *
 
-## 🛠️ Setup Instructions
+🛠️ Setup Instructions
+----------------------
 
-```bash
+```
 # Clone the repository
 $ git clone https://github.com/your-username/intelliscale.git
 $ cd intelliscale
 
-# Start the platform
+# Build and start all services
 $ docker-compose up --build -d
 
 # View Prometheus Dashboard
 Visit: http://localhost:9090
 
-# View Flask App
+# View Flask App (simulated traffic)
 Visit: http://localhost:5050
+
+# View Grafana Dashboard
+Visit: http://localhost:3000
 
 # Check Controller Logs
 $ docker logs controller
+
 ```
 
----
+* * * * *
 
-## 🚨 Current Status
+🛐 Current Status
+-----------------
 
-> IntelliScale is actively under development. Scaling actions are currently logged, with dynamic scaling to Kubernetes deployments planned next.
+> IntelliScale MVP is live with fully functioning metric scraping, RL-based scaling decisions, and real-time Grafana monitoring. Kubernetes dynamic scaling is under active development.
 
----
+* * * * *
 
-## 📊 Metrics Highlights
+📊 Metrics Highlights (Prototype)
+---------------------------------
 
-- 30% improved responsiveness vs static scaling
-- 25% reduced over-provisioning
-- 85% predictive scaling accuracy achieved in prototype testing
+-   **30% improvement** in scaling responsiveness over static thresholds
 
----
+-   **25% reduction** in resource over-provisioning
 
-## 🌐 Future Enhancements
+-   **85% predictive scaling accuracy** in prototype scenarios
 
-- Integrate Grafana dashboards for live visualization
-- Implement dynamic Kubernetes `kubectl scale` operations
-- Replace dummy RL agent with a PPO-trained model
-- Deploy to cloud platforms (AWS EKS / GCP GKE)
+* * * * *
 
----
+🌐 Future Enhancements
+----------------------
 
-## 👨‍💼 Author
+-   Implement dynamic `docker-compose scale` and `kubectl scale` for auto-scaling replicas
 
-- **Sahith Aitha**  
-LinkedIn: [Click here!](https://www.linkedin.com/in/sahith-aitha-845887191/)
+-   Extend RL Agent with a trained PPO model for smarter policies
 
----
+-   Deploy IntelliScale on managed Kubernetes services (AWS EKS / GCP GKE)
 
-## ✨ Acknowledgements
+-   Enable multi-metric optimization (cost vs performance balancing)
 
-Special thanks to open-source communities for FastAPI, Prometheus, and Kubernetes.
+* * * * *
 
----
+👨‍💼 Author
+------------
+
+-   **Sahith Aitha**\
+    LinkedIn: [Connect here!](https://www.linkedin.com/in/sahith-aitha-845887191/)
+
+* * * * *
+
+✨ Acknowledgements
+------------------
+
+Special thanks to the open-source communities for **FastAPI**, **Prometheus**, **Docker**, and **Grafana** that made this project possible.
+
+**Thank you so much for reading! Open for collaborations and suggestions!✌️**
