@@ -1,0 +1,21 @@
+# IntelliScale .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+*.venv
+env/
+venv/
+Pipfile.lock
+poetry.lock
+
+# Docker
+*.log
+docker-compose.override.yml
+.env
+
+# MacOS junk
+.DS_Store
